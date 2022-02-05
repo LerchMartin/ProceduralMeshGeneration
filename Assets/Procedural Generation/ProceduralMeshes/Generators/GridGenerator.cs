@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace ProceduralMeshes.Generators
 {
-    
     public struct Grid : IMeshGenerator
     {
         public int VertexCount => 4;
