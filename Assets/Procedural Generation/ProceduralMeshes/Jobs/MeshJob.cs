@@ -22,10 +22,18 @@ namespace ProceduralMeshes.Jobs
             generator.Execute(index, streams);
         }
 
-        public static JobHandle ScheduleParallel(Mesh mesh, Mesh.MeshData meshData, JobHandle dependency)
+        public static JobHandle ScheduleParallel(Mesh mesh, Mesh.MeshData meshData, int resolution, JobHandle dependency)
         {
             MeshJob<G, S> job = new MeshJob<G, S>();
-            job.streams.Initialize(meshData, job.generator.VertexCount, job.generator.IndexCount, mesh.bounds = job.generator.Bounds);
+
+            job.generator.Resolution = resolution;
+
+            job.streams.Initialize(
+                meshData,
+                job.generator.VertexCount, 
+                job.generator.IndexCount, 
+                mesh.bounds = job.generator.Bounds
+            );
 
             return job.ScheduleParallel(job.generator.JobLength, 1, dependency);
         }

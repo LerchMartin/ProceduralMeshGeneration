@@ -12,7 +12,7 @@ using UnityEngine.Rendering;
 
 namespace ProceduralMeshes.Streams
 {
-    public class MultiStream : IMeshStream
+    public struct MultiStream : IMeshStream
     {
         [NativeDisableContainerSafetyRestriction]
         NativeArray<float3> stream0, stream1;
