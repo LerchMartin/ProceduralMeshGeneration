@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace ProceduralMeshes.Streams
 {
-    public class SingleStream : IMeshStream
+    public struct SingleStream : IMeshStream
     {
         [StructLayout(LayoutKind.Sequential)]
         struct Stream0
@@ -20,10 +21,13 @@ namespace ProceduralMeshes.Streams
             public float2 texCoord0;
         }
 
+        [NativeDisableContainerSafetyRestriction]
         NativeArray<Stream0> stream;
-        NativeArray<int3> triangles;
+        
+        [NativeDisableContainerSafetyRestriction]
+        NativeArray<TriangleUInt16> triangles;
 
-        public void Setup(Mesh.MeshData meshData, int vertexCount, int indexCount)
+        public void Initialize(Mesh.MeshData meshData, int vertexCount, int indexCount, Bounds bounds)
         {
             var descriptor = new NativeArray<VertexAttributeDescriptor>(4, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
 
@@ -35,13 +39,13 @@ namespace ProceduralMeshes.Streams
             meshData.SetVertexBufferParams(vertexCount, descriptor);
             descriptor.Dispose();
 
-            meshData.SetIndexBufferParams(indexCount, IndexFormat.UInt32);
+            meshData.SetIndexBufferParams(indexCount, IndexFormat.UInt16);
 
             meshData.subMeshCount = 1;
-            meshData.SetSubMesh(0, new SubMeshDescriptor(0, indexCount));
+            meshData.SetSubMesh(0, new SubMeshDescriptor(0, indexCount) { bounds = bounds, vertexCount = vertexCount}, MeshUpdateFlags.DontRecalculateBounds | MeshUpdateFlags.DontValidateIndices);
 
             stream = meshData.GetVertexData<Stream0>();
-            triangles = meshData.GetIndexData<int>().Reinterpret<int3>(4);
+            triangles = meshData.GetIndexData<ushort>().Reinterpret<TriangleUInt16>(2);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

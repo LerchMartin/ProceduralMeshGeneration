@@ -7,7 +7,7 @@ namespace ProceduralMeshes.Streams
 {
     public interface IMeshStream
     {
-        void Setup(Mesh.MeshData meshData, int vertexCount, int indexCount);
+        void Initialize(Mesh.MeshData meshData, int vertexCount, int indexCount, Bounds bounds);
         void SetVertex(int index, Vertex data);
         void SetTriangle(int index, int3 triangle);
     }
