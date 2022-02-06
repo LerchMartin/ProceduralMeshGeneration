@@ -11,6 +11,7 @@ namespace ProceduralMeshes.Generators
     public struct Grid : IMeshGenerator
     {
         public int Resolution { get; set; }
+        public float EdgeLength { get; set; }
 
         public int VertexCount => 4 * Resolution * Resolution;
         public int IndexCount => 6 * Resolution * Resolution;
@@ -28,28 +29,28 @@ namespace ProceduralMeshes.Generators
             int y = i / Resolution;
             int x = i - Resolution * y;
 
-            var coordinates = new float4(x, x + .9f, y, y + .9f);
+            var coordinates = new float4(x, x + 1, y, y + 1) / Resolution - 0.5f    * EdgeLength;
 
             half halfZero = math.half(0);
             half halfOne = math.half(1);
             half halfMinusOne = math.half(-1);
 
             var vertex = new Vertex();
-            vertex.normal.z = -1f;
+            vertex.normal.y = 1f;
             vertex.tangent.xw = math.half2(halfOne, halfMinusOne);
 
-            vertex.position.xy = coordinates.xz;
+            vertex.position.xz = coordinates.xz;
             streams.SetVertex(verticeIndex + 0, vertex);
 
-            vertex.position.xy = coordinates.yz;
+            vertex.position.xz = coordinates.yz;
             vertex.texCoord0 = new half2(halfOne, halfZero);
             streams.SetVertex(verticeIndex + 1, vertex);
 
-            vertex.position.xy = coordinates.xw;
+            vertex.position.xz = coordinates.xw;
             vertex.texCoord0 = new half2(halfZero, halfOne);
             streams.SetVertex(verticeIndex + 2, vertex);
 
-            vertex.position.xy = coordinates.yw;
+            vertex.position.xz = coordinates.yw;
             vertex.texCoord0 = new half2(halfOne, halfOne);
             streams.SetVertex(verticeIndex + 3, vertex);
 

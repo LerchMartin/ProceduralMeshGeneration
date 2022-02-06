@@ -9,6 +9,7 @@ namespace ProceduralMeshes.Generators
     {
         void Execute<S>(int index, S streams) where S : struct, IMeshStream;
         int Resolution { get; set; }
+        float EdgeLength { get; set; }
         int VertexCount { get; }
         int IndexCount { get; }
         int JobLength { get; }
