@@ -29,7 +29,7 @@ namespace ProceduralMeshes.Generators
             int y = i / Resolution;
             int x = i - Resolution * y;
 
-            var coordinates = new float4(x, x + 1, y, y + 1) / Resolution - 0.5f    * EdgeLength;
+            var coordinates = new float4(x, x + 1, y, y + 1) / Resolution - 0.5f * EdgeLength;
 
             half halfZero = math.half(0);
             half halfOne = math.half(1);
